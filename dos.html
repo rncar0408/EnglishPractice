@@ -2,38 +2,784 @@
 <html lang="es">
 
 <head>
-    <meta charset="UTF-8">
-    <title>Prueba Feriados</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>✨ English Trainer Integrado (Depuración) ✨</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #5a67d8;
+            /* Indigo */
+            --secondary-color: #f5a623;
+            /* Orange */
+            --tertiary-color: #38a169;
+            /* Green */
+            --speaking-color: #3182ce;
+            /* Blue for speaking button */
+            --background-color: #f7fafc;
+            /* Very light gray */
+            --card-background: #ffffff;
+            --text-color: #2d3748;
+            /* Dark gray */
+            --subtle-text-color: #718096;
+            /* Medium gray */
+            --correct-color: #38a169;
+            /* Green */
+            --incorrect-color: #e53e3e;
+            /* Red */
+            --border-color: #e2e8f0;
+            /* Light gray border */
+            --border-radius: 8px;
+            --box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --font-main: 'Lato', sans-serif;
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+        }
+
+        .container {
+            background-color: var(--card-background);
+            padding: 30px 40px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            max-width: 750px;
+            width: 100%;
+            text-align: center;
+        }
+
+        h1 {
+            color: var(--primary-color);
+            margin-bottom: 35px;
+            font-weight: 700;
+            font-size: 2.2em;
+        }
+
+        .section {
+            margin-bottom: 30px;
+            padding: 25px;
+            background-color: var(--card-background);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+        }
+
+        .section h2 {
+            margin-top: 0;
+            margin-bottom: 20px;
+            color: var(--secondary-color);
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+            font-size: 1.5em;
+            font-weight: 700;
+        }
+
+        .button-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 18px;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 700;
+            font-family: var(--font-main);
+            transition: background-color 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: var(--box-shadow);
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+
+        button:hover {
+            background-color: #4c51bf;
+            box-shadow: 0 7px 14px rgba(76, 81, 191, 0.2), 0 3px 6px rgba(0, 0, 0, 0.08);
+            transform: translateY(-1px);
+        }
+
+        button:active {
+            transform: scale(0.98) translateY(0);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        button:disabled {
+            background-color: #a0aec0;
+            color: #e2e8f0;
+            cursor: not-allowed;
+            box-shadow: none;
+            transform: none;
+        }
+
+        /* Question Section General Style */
+        .question-section {
+            margin-top: 25px;
+            padding: 25px 30px;
+            background-color: #ebf4ff;
+            border: 1px solid #bee3f8;
+            border-radius: var(--border-radius);
+        }
+
+        /* Text Question Display */
+        #questionText {
+            font-size: 1.2em;
+            margin-bottom: 20px;
+            font-weight: normal;
+            line-height: 1.5;
+            min-height: 3em;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #2a4365;
+        }
+
+        #questionText strong {
+            color: var(--primary-color);
+            font-weight: 700;
+            margin: 0 4px;
+        }
+
+        #questionText em {
+            font-style: italic;
+            color: #4a5568;
+        }
+
+        #questionText .tense-hint {
+            font-size: 0.85em;
+            color: var(--subtle-text-color);
+            margin-left: 8px;
+            font-style: italic;
+        }
+
+        #questionText .speaking-prompt {
+            /* Specific style for speaking instructions */
+            font-weight: 700;
+            color: var(--speaking-color);
+            font-size: 1.25em;
+            /* Make it larger */
+        }
+
+        /* Input/Actions for Text Exercises */
+        #answerInput {
+            width: 100%;
+            padding: 12px 15px;
+            margin-bottom: 15px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            font-size: 1.1em;
+            font-family: var(--font-main);
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        #answerInput:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(90, 103, 216, 0.3);
+        }
+
+        /* General Action Buttons (Submit, Next) */
+        .action-buttons {
+            margin-top: 15px;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        #submitAnswerBtn {
+            /* Keep specific ID for easy selection */
+            background-color: var(--primary-color);
+        }
+
+        #nextQuestionBtn {
+            background-color: var(--tertiary-color);
+        }
+
+        #nextQuestionBtn:hover {
+            background-color: #2f855a;
+        }
+
+        /* Specific Controls for Speaking Exercise */
+        #speakingControls {
+            display: flex;
+            /* Use flexbox */
+            flex-direction: column;
+            /* Stack vertically */
+            align-items: center;
+            /* Center items */
+            gap: 15px;
+            /* Space between button and output */
+            margin-top: 15px;
+        }
+
+        #startSpeakingBtn {
+            background-color: var(--speaking-color);
+            /* Specific color */
+            padding: 14px 25px;
+            /* Make it a bit bigger */
+            font-size: 1.1rem;
+        }
+
+        #startSpeakingBtn:hover {
+            background-color: #2b6cb0;
+            /* Darker blue */
+        }
+
+        #startSpeakingBtn.listening {
+            background-color: var(--incorrect-color);
+            /* Red when listening */
+            animation: pulse 1.5s infinite;
+        }
+
+        #speechFeedbackArea {
+            /* Renamed from speechOutput for clarity */
+            width: 100%;
+            /* Take full width within controls */
+            padding: 15px;
+            background-color: #f7fafc;
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            min-height: 80px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            line-height: 1.6;
+            text-align: center;
+        }
+
+        #speechFeedbackArea .prompt {
+            font-style: italic;
+            color: var(--subtle-text-color);
+            margin-bottom: 10px;
+            font-size: 0.95em;
+        }
+
+        #speechFeedbackArea .transcript {
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 8px;
+            font-size: 1.05em;
+        }
+
+        #speechFeedbackArea .result {
+            margin-top: 8px;
+            font-weight: 700;
+            padding: 6px 10px;
+            border-radius: var(--border-radius);
+            font-size: 1em;
+        }
+
+        #speechFeedbackArea .result.correct {
+            color: var(--correct-color);
+            background-color: #c6f6d5;
+        }
+
+        #speechFeedbackArea .result.incorrect {
+            color: var(--incorrect-color);
+            background-color: #fed7d7;
+        }
+
+        #speechFeedbackArea .result.listening-msg {
+            color: var(--subtle-text-color);
+            font-style: italic;
+        }
+
+        /* General Feedback (for text exercises) */
+        #feedback {
+            margin-top: 20px;
+            font-weight: 700;
+            min-height: 1.3em;
+            font-size: 1.1em;
+            padding: 8px 12px;
+            border-radius: var(--border-radius);
+            display: inline-block;
+        }
+
+        #feedback.correct {
+            color: var(--correct-color);
+            background-color: #c6f6d5;
+        }
+
+        #feedback.incorrect {
+            color: var(--incorrect-color);
+            background-color: #fed7d7;
+        }
+
+        /* Pulse animation (unchanged) */
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(229, 62, 62, 0.7);
+            }
+
+            70% {
+                transform: scale(1.05);
+                box-shadow: 0 0 0 10px rgba(229, 62, 62, 0);
+            }
+
+            100% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(229, 62, 62, 0);
+            }
+        }
+
+        /* Responsive Adjustments (unchanged) */
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+
+            .container {
+                padding: 20px 15px;
+            }
+
+            h1 {
+                font-size: 1.8em;
+                margin-bottom: 25px;
+            }
+
+            .section {
+                padding: 20px;
+            }
+
+            .section h2 {
+                font-size: 1.3em;
+                margin-bottom: 15px;
+            }
+
+            .button-grid {
+                grid-template-columns: 1fr;
+            }
+
+            #questionText {
+                font-size: 1.1em;
+            }
+
+            #answerInput {
+                font-size: 1em;
+            }
+
+            .action-buttons button {
+                padding: 10px 15px;
+                font-size: 0.95rem;
+            }
+
+            .output {
+                padding: 15px;
+            }
+        }
+    </style>
 </head>
 
 <body>
-    <h1>Feriados 2025</h1>
-    <ul id="feriados"></ul>
+    <div class="container">
+        <h1>✨ English Trainer Integrado (Depuración) ✨</h1>
+
+        <div class="section">
+            <h2>Elige tu Práctica</h2>
+            <div class="button-grid">
+                <button onclick="askQuestion('comparative')">📈 Comparativos</button>
+                <button onclick="askQuestion('tense')">⏳ Tiempos Verbales</button>
+                <button onclick="askQuestion('conditional')">❓ Condicionales</button>
+                <button onclick="askQuestion('preposition')">📍 Preposiciones</button>
+                <button onclick="askQuestion('phrasal')">🗣️ Phrasal Verbs</button>
+                <button onclick="askQuestion('speaking')">🎤 Speaking Exercise</button>
+                <button onclick="askQuestion('translate-en')">EN → ES Traducir</button>
+                <button onclick="askQuestion('translate-es')">ES → EN Traducir</button>
+            </div>
+        </div>
+
+        <!-- Unified Question Section -->
+        <div class="question-section" id="questionSection" style="display:none;">
+            <!-- Question Text Area (used by all types) -->
+            <p id="questionText"></p>
+
+            <!-- Input for Text Exercises (hidden for speaking) -->
+            <input type="text" id="answerInput" style="display: none;" placeholder="Escribe tu respuesta aquí..."
+                onkeydown="if(event.key === 'Enter' && !document.getElementById('submitAnswerBtn').disabled) checkAnswer()">
+
+            <!-- Feedback for Text Exercises (hidden for speaking initially) -->
+            <p id="feedback" style="display: none;"></p>
+
+            <!-- Controls for Speaking Exercise (hidden for text) -->
+            <div id="speakingControls" style="display: none;">
+                <button id="startSpeakingBtn" onclick="startListening()">🎤 Empezar a Hablar</button>
+                <div id="speechFeedbackArea">Haz clic en el botón para empezar.</div>
+            </div>
+
+            <!-- Action Buttons (Submit hidden for speaking, Next shown after completion) -->
+            <div class="action-buttons">
+                <button id="submitAnswerBtn" style="display: none;" onclick="checkAnswer()">✅ Enviar</button>
+                <button id="nextQuestionBtn" style="display: none;" onclick="askNextQuestion()">Siguiente ➡️</button>
+            </div>
+        </div>
+
+    </div>
 
     <script>
-        fetch('https://api.argentinadatos.com/v1/feriados/2025')
-            .then(response => response.json())
-            .then(data => {
-                const lista = document.getElementById('feriados');
-                data.forEach(feriado => {
-                    const li = document.createElement('li');
-                    li.textContent = `${feriado.fecha} - ${feriado.nombre}`;
-                    lista.appendChild(li);
-                });
-            })
-            .catch(error => console.error('Error al obtener feriados:', error));
-    </script>
+        // ==============================================================
+        // DATA POOLS (Samples - Mantener como estaban)
+        // ==============================================================
+        const comparativesData = [{ type: 'adj', q: "good", a: "better" }, { type: 'adj', q: "bad", a: "worse" }, { type: 'adj', q: "far", a: "farther / further" }, { type: 'adj', q: "little", a: "less" }, { type: 'adj', q: "many / much", a: "more" }, { type: 'adj', q: "old", a: "older / elder" }, { type: 'adj', q: "happy", a: "happier" }, { type: 'adj', q: "sad", a: "sadder" }, { type: 'adj', q: "big", a: "bigger" }, { type: 'adj', q: "small", a: "smaller" }, { type: 'adj', q: "hot", a: "hotter" }, { type: 'adj', q: "cold", a: "colder" }, { type: 'adj', q: "easy", a: "easier" }, { type: 'adj', q: "difficult", a: "more difficult" }, { type: 'adj', q: "beautiful", a: "more beautiful" }, { type: 'adj', q: "interesting", a: "more interesting" }, { type: 'adj', q: "expensive", a: "more expensive" }, { type: 'adj', q: "cheap", a: "cheaper" }, { type: 'adj', q: "intelligent", a: "more intelligent" }, { type: 'adj', q: "narrow", a: "narrower" }, { type: 'adj', q: "wide", a: "wider" }, { type: 'adj', q: "heavy", a: "heavier" }, { type: 'adj', q: "light", a: "lighter" }, { type: 'adj', q: "busy", a: "busier" }, { type: 'fill', q: "My sister is ______ (young) than me.", a: "younger" }, { type: 'fill', q: "This exam was ______ (hard) than the last one.", a: "harder" }, { type: 'fill', q: "Driving is ______ (dangerous) than flying.", a: "more dangerous" }, { type: 'fill', q: "He runs ______ (fast) than his brother.", a: "faster" }, { type: 'fill', q: "The weather today is ______ (good) than yesterday.", a: "better" }, { type: 'fill', q: "This book is ______ (boring) than the movie.", a: "more boring" }, { type: 'fill', q: "Your explanation is ______ (clear) now.", a: "clearer" }, { type: 'fill', q: "Health is ______ (important) than money.", a: "more important" }, { type: 'fill', q: "She speaks English ______ (fluent) than him.", a: "more fluently" }, { type: 'fill', q: "I have ______ (little) time than I thought.", a: "less" }, { type: 'fill', q: "New York is ______ (large) than Boston.", a: "larger" }, { type: 'fill', q: "This suitcase is ______ (heavy) than that one.", a: "heavier" }, { type: 'fill', q: "He is ______ (polite) than his colleagues.", a: "more polite" }, { type: 'fill', q: "These flowers are ______ (pretty) than those.", a: "prettier" },];
+        const tensesData = [{ type: 'conjugate', verb: 'walk', tense: 'Present Simple (He)', a: "walks" }, { type: 'conjugate', verb: 'eat', tense: 'Present Continuous (They)', a: "are eating" }, { type: 'conjugate', verb: 'study', tense: 'Past Simple', a: "studied" }, { type: 'conjugate', verb: 'be', tense: 'Past Continuous (I)', a: "was" }, { type: 'conjugate', verb: 'see', tense: 'Present Perfect (She)', a: "has seen" }, { type: 'conjugate', verb: 'live', tense: 'Past Perfect (We)', a: "had lived" }, { type: 'conjugate', verb: 'finish', tense: 'Future Simple (You)', a: "will finish" }, { type: 'conjugate', verb: 'work', tense: 'Future Continuous (He)', a: "will be working" }, { type: 'conjugate', verb: 'arrive', tense: 'Future Perfect (They)', a: "will have arrived" }, { type: 'conjugate', verb: 'sleep', tense: 'Present Perfect Continuous (I)', a: "have been sleeping" }, { type: 'conjugate', verb: 'write', tense: 'Past Simple', a: "wrote" }, { type: 'conjugate', verb: 'read', tense: 'Past Simple', a: "read" }, { type: 'conjugate', verb: 'begin', tense: 'Past Participle', a: "begun" }, { type: 'conjugate', verb: 'choose', tense: 'Past Simple', a: "chose" }, { type: 'fill', q: "Water ______ (boil) at 100 degrees Celsius.", tense: "Present Simple", a: "boils" }, { type: 'fill', q: "Listen! Someone ______ (play) the piano.", tense: "Present Continuous", a: "is playing" }, { type: 'fill', q: "We ______ (go) to the cinema last night.", tense: "Past Simple", a: "went" }, { type: 'fill', q: "While I ______ (drive), I saw an accident.", tense: "Past Continuous", a: "was driving" }, { type: 'fill', q: "She ______ (already/finish) her homework.", tense: "Present Perfect", a: "has already finished" }, { type: 'fill', q: "By the time he arrived, the train ______ (leave).", tense: "Past Perfect", a: "had left" }, { type: 'fill', q: "I think it ______ (rain) tomorrow.", tense: "Future Simple", a: "will rain" }, { type: 'fill', q: "This time next week, we ______ (relax) on the beach.", tense: "Future Continuous", a: "will be relaxing" }, { type: 'fill', q: "By 2025, they ______ (build) the new bridge.", tense: "Future Perfect", a: "will have built" }, { type: 'fill', q: "He ______ (learn) English for five years now.", tense: "Present Perfect Continuous", a: "has been learning" }, { type: 'fill', q: "My parents ______ (visit) us next weekend.", tense: "Present Continuous (Future)", a: "are visiting" }, { type: 'fill', q: "If I see him, I ______ (tell) him.", tense: "First Conditional (Future)", a: "will tell" }, { type: 'fill', q: "She ______ (usually/get up) early.", tense: "Present Simple", a: "usually gets up" }, { type: 'fill', q: "They ______ (not/watch) TV at the moment.", tense: "Present Continuous", a: "are not watching / aren't watching" }, { type: 'fill', q: "______ you ______ (ever/be) to Canada?", tense: "Present Perfect", a: "Have you ever been" }, { type: 'fill', q: "He ______ (work) here since 2010.", tense: "Present Perfect", a: "has worked" }, { type: 'fill', q: "Look at those clouds! It ______ (rain).", tense: "Going to Future", a: "is going to rain" }, { type: 'fill', q: "I ______ (wait) for you when your bus arrives.", tense: "Future Continuous", a: "will be waiting" },];
+        const conditionalsData = [{ type: 'make', condition: 'heat ice', result: 'it melts', condition_type: 0, a: "If you heat ice, it melts" }, { type: 'make', condition: 'it is sunny', result: 'go to the park', condition_type: 1, a: "If it is sunny, we will go to the park" }, { type: 'make', condition: 'have more money', result: 'travel the world', condition_type: 2, a: "If I had more money, I would travel the world" }, { type: 'make', condition: 'know her number', result: 'call her yesterday', condition_type: 3, a: "If I had known her number, I would have called her yesterday" }, { type: 'make', condition: 'not rain', result: 'have a picnic', condition_type: 1, a: "If it doesn't rain, we will have a picnic / If it does not rain, we will have a picnic" }, { type: 'make', condition: 'be a bird', result: 'fly south', condition_type: 2, a: "If I were a bird, I would fly south" }, { type: 'make', condition: 'study harder', result: 'pass the exam (past)', condition_type: 3, a: "If you had studied harder, you would have passed the exam" }, { type: 'fill', q: "If you mix red and yellow, you ______ (get) orange.", condition_type: 0, a: "get" }, { type: 'fill', q: "She will pass the exam if she ______ (study) harder.", condition_type: 1, a: "studies" }, { type: 'fill', q: "What would you do if you ______ (win) the lottery?", condition_type: 2, a: "won" }, { type: 'fill', q: "If I were you, I ______ (apologize).", condition_type: 2, a: "would apologize" }, { type: 'fill', q: "They ______ (not be) late if they had left earlier.", condition_type: 3, a: "would not have been / wouldn't have been" }, { type: 'fill', q: "If he ______ (listen) to the instructions, he wouldn't have made that mistake.", condition_type: 3, a: "had listened" }, { type: 'fill', q: "If I had known you were coming, I ______ (bake) a cake.", condition_type: 3, a: "would have baked" }, { type: 'fill', q: "Unless you ______ (hurry), you will miss the bus.", condition_type: 1, a: "hurry" }, { type: 'fill', q: "If I ______ (be) rich, I would still work.", condition_type: 2, a: "were" }, { type: 'fill', q: "Plants die if they ______ (not get) enough water.", condition_type: 0, a: "do not get / don't get" }, { type: 'fill', q: "He ______ (call) you if he had your number.", condition_type: 2, a: "would call" }, { type: 'fill', q: "If the weather ______ (be) nice tomorrow, we'll go hiking.", condition_type: 1, a: "is" }, { type: 'fill', q: "We would have enjoyed the party more if it ______ (not be) so crowded.", condition_type: 3, a: "had not been / hadn't been" },];
+        const prepositionsData = [{ type: 'fill', q: "The book is ______ the table.", a: "on" }, { type: 'fill', q: "She lives ______ London.", a: "in" }, { type: 'fill', q: "He arrived ______ the airport.", a: "at" }, { type: 'fill', q: "We walked ______ the park.", a: "through / across / in" }, { type: 'fill', q: "The cat is hiding ______ the bed.", a: "under" }, { type: 'fill', q: "Meet me ______ 8 PM.", a: "at" }, { type: 'fill', q: "The meeting is ______ Monday.", a: "on" }, { type: 'fill', q: "My birthday is ______ July.", a: "in" }, { type: 'fill', q: "He is interested ______ history.", a: "in" }, { type: 'fill', q: "She is good ______ playing tennis.", a: "at" }, { type: 'fill', q: "I agree ______ you.", a: "with" }, { type: 'fill', q: "Depend ______ me.", a: "on" }, { type: 'fill', q: "Look ______ the picture.", a: "at" }, { type: 'fill', q: "He jumped ______ the river.", a: "into" }, { type: 'fill', q: "The keys are ______ my pocket.", a: "in" }, { type: 'fill', q: "We drove ______ the city.", a: "to / towards" }, { type: 'fill', q: "The shop is ______ the bank.", a: "next to / beside / near" }, { type: 'fill', q: "Divide the cake ______ four pieces.", a: "into" }, { type: 'fill', q: "She is afraid ______ spiders.", a: "of" }, { type: 'fill', q: "Thanks ______ your help.", a: "for" }, { type: 'fill', q: "He complained ______ the noise.", a: "about" }, { type: 'fill', q: "This book belongs ______ Sarah.", a: "to" }, { type: 'fill', q: "We arrived ______ Paris last night.", a: "in" }, { type: 'fill', q: "The train arrived ______ platform 3.", a: "at" }, { type: 'fill', q: "I'm looking forward ______ seeing you.", a: "to" }, { type: 'fill', q: "She apologized ______ being late.", a: "for" }, { type: 'fill', q: "He is responsible ______ the project.", a: "for" }, { type: 'fill', q: "The book was written ______ Jane Austen.", a: "by" }, { type: 'fill', q: "Put the milk ______ the fridge.", a: "in / inside" }, { type: 'fill', q: "He sat ______ the chair.", a: "on / in" },];
+        const phrasalVerbsData = [{ type: 'fill', q: "Please ______ (take off) your shoes.", a: "take off" }, { type: 'fill', q: "He needs to ______ (give up) smoking.", a: "give up" }, { type: 'fill', q: "Can you ______ (look after) my cat this weekend?", a: "look after" }, { type: 'fill', q: "She ______ (made up) a funny story.", a: "made up" }, { type: 'fill', q: "Let's ______ (put off) the meeting until Friday.", a: "put off" }, { type: 'fill', q: "Don't forget to ______ (turn off) the lights.", a: "turn off" }, { type: 'fill', q: "I ______ (ran into) an old friend yesterday.", a: "ran into" }, { type: 'fill', q: "Could you ______ (fill in) this form?", a: "fill in" }, { type: 'fill', q: "We need to ______ (find out) what time the train leaves.", a: "find out" }, { type: 'fill', q: "He ______ (grew up) in a small town.", a: "grew up" }, { type: 'fill', q: "Can you ______ (pick up) some milk on your way home?", a: "pick up" }, { type: 'fill', q: "She decided to ______ (break up) with her boyfriend.", a: "break up" }, { type: 'fill', q: "The plane will ______ (take off) in 10 minutes.", a: "take off" }, { type: 'fill', q: "Please ______ (calm down) and tell me what happened.", a: "calm down" }, { type: 'fill', q: "They ______ (get along) very well.", a: "get along" }, { type: 'fill', q: "We have ______ (run out of) sugar.", a: "run out of" }, { type: 'fill', q: "I need to ______ (look up) this word in the dictionary.", a: "look up" }, { type: 'fill', q: "He finally ______ (showed up) an hour late.", a: "showed up" }, { type: 'fill', q: "Can you ______ (turn up) the volume?", a: "turn up" }, { type: 'fill', q: "She ______ (passed away) last year.", a: "passed away" }, { type: 'fill', q: "Don't ______ (give up) on your dreams.", a: "give up" }, { type: 'fill', q: "He ______ (asked her out) on a date.", a: "asked her out" }, { type: 'fill', q: "Let's ______ (hang out) this weekend.", a: "hang out" }, { type: 'fill', q: "You should ______ (cut down on) sweets.", a: "cut down on" }, { type: 'fill', q: "The car ______ (broke down) on the highway.", a: "broke down" }, { type: 'fill', q: "I'll ______ (call you back) later.", a: "call you back" },];
+        const translationsEnData = [{ type: 'full', q: "I need to buy groceries.", a: "Necesito comprar comestibles / Necesito hacer la compra" }, { type: 'full', q: "What time does the movie start?", a: "¿A qué hora empieza la película?" }, { type: 'full', q: "Could you pass me the salt, please?", a: "¿Podrías pasarme la sal, por favor?" }, { type: 'full', q: "It's important to practice every day.", a: "Es importante practicar todos los días" }, { type: 'full', q: "The library is closed on Sundays.", a: "La biblioteca está cerrada los domingos" }, { type: 'full', q: "My flight was delayed due to bad weather.", a: "Mi vuelo se retrasó debido al mal tiempo" }, { type: 'full', q: "She enjoys listening to music while she works.", a: "A ella le gusta escuchar música mientras trabaja / Disfruta escuchando..." }, { type: 'full', q: "He forgot to set his alarm clock.", a: "Se olvidó de poner el despertador" }, { type: 'full', q: "How long have you been learning English?", a: "¿Cuánto tiempo llevas aprendiendo inglés?" }, { type: 'full', q: "The restaurant we went to last night was excellent.", a: "El restaurante al que fuimos anoche fue excelente" }, { type: 'fill', q: "I want to ______ a new language.", blank_en: "learn", a: "aprender" }, { type: 'fill', q: "Can you ______ me with my homework?", blank_en: "help", a: "ayudar" }, { type: 'fill', q: "We decided to ______ a movie tonight.", blank_en: "watch", a: "ver / mirar" }, { type: 'fill', q: "Don't ______ to lock the door.", blank_en: "forget", a: "olvides" }, { type: 'fill', q: "He ______ very fast.", blank_en: "runs", a: "corre" }, { type: 'fill', q: "She ______ a beautiful song.", blank_en: "sang", a: "cantó" }, { type: 'fill', q: "We need to ______ the train.", blank_en: "catch", a: "coger / tomar" }, { type: 'fill', q: "Please ______ the window.", blank_en: "close", a: "cierra / cierre" },];
+        const translationsEsData = [{ type: 'full', q: "Me gustaría reservar una mesa para dos.", a: "I would like to book a table for two / I'd like to reserve a table for two" }, { type: 'full', q: "¿Cuánto cuesta este recuerdo?", a: "How much does this souvenir cost?" }, { type: 'full', q: "El tren llega a las cinco y media.", a: "The train arrives at half past five / The train arrives at 5:30" }, { type: 'full', q: "Necesitamos encontrar una solución pronto.", a: "We need to find a solution soon" }, { type: 'full', q: "Ayer llovió todo el día.", a: "It rained all day yesterday" }, { type: 'full', q: "¿Puedes recomendarme un buen restaurante por aquí?", a: "Can you recommend a good restaurant around here?" }, { type: 'full', q: "Prefiero el té al café por la mañana.", a: "I prefer tea to coffee in the morning" }, { type: 'full', q: "No entiendo lo que quieres decir.", a: "I don't understand what you mean / I do not understand what you mean" }, { type: 'full', q: "Mi hermano es mayor que yo.", a: "My brother is older than me" }, { type: 'full', q: "Si tuviera más tiempo, leería más libros.", a: "If I had more time, I would read more books" }, { type: 'fill', q: "Me gusta ______ fútbol con mis amigos.", blank_es: "jugar", a: "play" }, { type: 'fill', q: "¿Quieres ______ algo?", blank_es: "beber", a: "drink" }, { type: 'fill', q: "Vamos a ______ una pizza esta noche.", blank_es: "comer", a: "eat" }, { type: 'fill', q: "Necesito ______ un libro de la biblioteca.", blank_es: "leer / tomar prestado", a: "read / borrow" }, { type: 'fill', q: "Ella ______ español y francés.", blank_es: "habla", a: "speaks" }, { type: 'fill', q: "El perro está ______ en el sofá.", blank_es: "durmiendo", a: "sleeping" }, { type: 'fill', q: "Fuimos a la ______ ayer.", blank_es: "playa", a: "beach" }, { type: 'fill', q: "¿Dónde está el ______ más cercano?", blank_es: "baño", a: "bathroom / restroom / toilet" },];
+        const speakingExercisesData = [{ type: 'say', q: "Hello, how are you today?" }, { type: 'say', q: "My name is Alex, nice to meet you." }, { type: 'say', q: "The quick brown fox jumps over the lazy dog." }, { type: 'say', q: "She sells seashells by the seashore." }, { type: 'say', q: "Peter Piper picked a peck of pickled peppers." }, { type: 'say', q: "I am practicing my English pronunciation." }, { type: 'say', q: "What is your favorite type of music?" }, { type: 'say', q: "Could you please tell me the way to the station?" }, { type: 'say', q: "It's a beautiful day for a walk in the park." }, { type: 'say', q: "Learning a new language takes time and effort." }, { type: 'say', q: "Practice makes perfect." }, { type: 'say', q: "Where is the nearest post office?" }, { type: 'say', q: "I would like to order a coffee, please." }, { type: 'say', q: "How much does this cost?" }, { type: 'say', q: "Excuse me, can you help me?" }, { type: 'say', q: "The weather forecast predicts rain tomorrow." }, { type: 'say', q: "Reading books is a great way to expand your vocabulary." }, { type: 'say', q: "What did you do last weekend?" }, { type: 'say', q: "I'm looking forward to my vacation." }, { type: 'say', q: "Could you speak a little slower, please?" }, { type: 'say', q: "What time does the next train leave?" }, { type: 'say', q: "I need to go to the supermarket." }, { type: 'say', q: "Do you have any recommendations?" }, { type: 'say', q: "It was nice talking to you." }, { type: 'say', q: "Can I have the bill, please?" }, { type: 'say', q: "The traffic was terrible this morning." },];
 
-    <div class="container-wrapper-genially" style="position: relative; min-height: 400px; max-width: 60%;"><video
-            class="loader-genially" autoplay="autoplay" loop="loop" playsinline="playsInline" muted="muted"
-            style="position: absolute;top: 45%;left: 50%;transform: translate(-50%, -50%);width: 80px;height: 80px;margin-bottom: 10%">
-            <source src="https://static.genially.com/resources/loader-default-rebranding.mp4" type="video/mp4" />Your
-            browser does not support the video tag.
-        </video>
-        <div id="6810fb7c919c17defbe28ed6" class="genially-embed"
-            style="margin: 0px auto; position: relative; height: auto; width: 100%;"></div>
-    </div>
-    <script>(function (d) { var js, id = "genially-embed-js", ref = d.getElementsByTagName("script")[0]; if (d.getElementById(id)) { return; } js = d.createElement("script"); js.id = id; js.async = true; js.src = "https://view.genially.com/static/embed/embed.js"; ref.parentNode.insertBefore(js, ref); }(document));</script>
+        const exercises = {
+            comparative: comparativesData, tense: tensesData, conditional: conditionalsData,
+            preposition: prepositionsData, phrasal: phrasalVerbsData, speaking: speakingExercisesData,
+            "translate-en": translationsEnData, "translate-es": translationsEsData
+        };
+
+        // --- Global Variables ---
+        let currentExercise = null;
+        let currentPhraseToSay = "";
+        let lastAskedType = null;
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        let recognition = null;
+
+        // --- DOM Elements ---
+        const questionSection = document.getElementById("questionSection");
+        const questionText = document.getElementById("questionText");
+        const answerInput = document.getElementById("answerInput");
+        const feedback = document.getElementById("feedback"); // For text exercises
+        const submitAnswerBtn = document.getElementById("submitAnswerBtn");
+        const nextQuestionBtn = document.getElementById("nextQuestionBtn");
+        const speakingControls = document.getElementById("speakingControls");
+        const startSpeakingBtn = document.getElementById("startSpeakingBtn");
+        const speechFeedbackArea = document.getElementById("speechFeedbackArea");
+
+        // --- Helper Functions ---
+        function getRandomItem(arr) { if (!arr || arr.length === 0) return null; return arr[Math.floor(Math.random() * arr.length)]; }
+        function normalizeText(text) { if (typeof text !== 'string') return ''; return text.toLowerCase().trim().replace(/[.,!?;:]/g, '').replace(/\s+/g, ' '); }
+
+        // --- Core Logic ---
+        function askQuestion(type) {
+            console.log(`[askQuestion] Llamada para tipo: ${type}`);
+            lastAskedType = type;
+            const data = exercises[type];
+
+            // --- Reforzado: Reseteo explícito de la UI al inicio ---
+            questionSection.style.display = "block";
+            nextQuestionBtn.style.display = 'none';
+            answerInput.style.display = 'none';
+            feedback.style.display = 'none';
+            feedback.className = '';
+            feedback.innerText = '';
+            submitAnswerBtn.style.display = 'none';
+            submitAnswerBtn.disabled = true; // Empezar deshabilitado
+            speakingControls.style.display = 'none';
+            startSpeakingBtn.disabled = true; // Empezar deshabilitado
+            startSpeakingBtn.classList.remove('listening');
+            startSpeakingBtn.innerHTML = "🎤 Empezar a Hablar";
+            speechFeedbackArea.innerHTML = "";
+            questionText.innerHTML = "";
+
+            currentExercise = null;
+            currentPhraseToSay = "";
+            console.log("[askQuestion] UI reseteada.");
+
+            // --- Handle No Data ---
+            if (!data || data.length === 0) {
+                questionText.innerHTML = `<p>😕 Lo siento, aún no hay ejercicios disponibles para esta categoría.</p>`;
+                console.warn(`[askQuestion] No hay datos para categoría: ${type}`);
+                return;
+            }
+
+            currentExercise = getRandomItem(data);
+            if (!currentExercise) {
+                questionText.innerHTML = `<p>⚠️ No se pudo cargar un ejercicio. Inténtalo de nuevo.</p>`;
+                console.error(`[askQuestion] Fallo al obtener ejercicio aleatorio para: ${type}`);
+                return;
+            }
+            console.log("[askQuestion] Ejercicio actual cargado:", currentExercise);
+
+            // --- Configure UI based on Exercise Type ---
+            let displayQuestion = "";
+
+            if (type === 'speaking') {
+                // --- Speaking Exercise Setup ---
+                console.log("[askQuestion] Configurando ejercicio de Speaking.");
+                currentPhraseToSay = currentExercise.q;
+                displayQuestion = `Por favor, di en voz alta:<br/><span class="speaking-prompt">"${currentPhraseToSay}"</span>`;
+                questionText.innerHTML = displayQuestion;
+
+                speakingControls.style.display = 'flex'; // Mostrar controles de voz
+                startSpeakingBtn.disabled = false; // Habilitar botón de empezar
+                speechFeedbackArea.innerHTML = "Haz clic en el botón para empezar.";
+                console.log("[askQuestion] Controles de Speaking mostrados y habilitados.");
+
+            } else {
+                // --- Text-Based Exercise Setup ---
+                console.log("[askQuestion] Configurando ejercicio de Texto.");
+                answerInput.style.display = 'block';
+                submitAnswerBtn.style.display = 'inline-block';
+                submitAnswerBtn.disabled = false; // **Habilitar botón de enviar**
+                console.log("[askQuestion] Botón Enviar HABILITADO para ejercicio de texto.");
+                answerInput.value = "";
+
+                // Preparar pregunta
+                const q = currentExercise.q; const verb = currentExercise.verb; const tense = currentExercise.tense;
+                const condition = currentExercise.condition; const result = currentExercise.result; const condition_type = currentExercise.condition_type;
+                const blank_en = currentExercise.blank_en; const blank_es = currentExercise.blank_es;
+                const placeholder = '______ <span class="tense-hint">(...)</span>';
+                switch (type) {
+                    case 'comparative': displayQuestion = (currentExercise.type === 'adj') ? `¿Cuál es la forma comparativa de '<strong>${q}</strong>'?` : `Completa: ${q.replace('______', placeholder)}`; break;
+                    case 'tense': displayQuestion = (currentExercise.type === 'conjugate') ? `Conjuga '<strong>${verb}</strong>' en <strong>${tense}</strong>.` : `Completa: ${q.replace('______', '______')} <span class="tense-hint">(${tense})</span>`; break;
+                    case 'conditional': displayQuestion = (currentExercise.type === 'make') ? `Crea una condicional <strong>Tipo ${condition_type}</strong>:<br/>Condición: '<em>${condition}</em>'<br/>Resultado: '<em>${result}</em>'` : `Completa (<strong>Tipo ${condition_type}</strong>): ${q.replace('______', placeholder)}`; break;
+                    case 'preposition': case 'phrasal': displayQuestion = `Completa: ${q.replace('______', placeholder)}`; break;
+                    case 'translate-en': displayQuestion = (currentExercise.type === 'full') ? `Traduce al español: <br/>"<em>${q}</em>"` : `Traduce la palabra que falta al español: <br/>"${q.replace('______', `<strong>[${blank_en}]</strong>`)}"`; break;
+                    case 'translate-es': displayQuestion = (currentExercise.type === 'full') ? `Traduce al inglés: <br/>"<em>${q}</em>"` : `Traduce la palabra que falta al inglés: <br/>"${q.replace('______', `<strong>[${blank_es}]</strong>`)}"`; break;
+                    default: displayQuestion = q || "Error: Pregunta no encontrada.";
+                }
+                questionText.innerHTML = displayQuestion;
+                answerInput.focus();
+                console.log("[askQuestion] Controles de Texto mostrados y habilitados.");
+            }
+        }
+
+        function checkAnswer() {
+            console.log("[checkAnswer] Se hizo clic en Enviar.");
+            if (!currentExercise || lastAskedType === 'speaking') {
+                console.log("[checkAnswer] Saliendo: No es ejercicio de texto o no hay ejercicio actual.");
+                return; // Ignorar si es ejercicio de habla
+            }
+
+            const userAnswer = answerInput.value.trim();
+            console.log(`[checkAnswer] Respuesta usuario: "${userAnswer}"`);
+
+            if (userAnswer === "") {
+                console.log("[checkAnswer] Respuesta vacía.");
+                feedback.innerText = "❗ Por favor, escribe una respuesta.";
+                feedback.className = 'incorrect';
+                feedback.style.display = 'inline-block';
+                return;
+            }
+
+            console.log("[checkAnswer] Deshabilitando botón Enviar.");
+            submitAnswerBtn.disabled = true; // Deshabilitar submit INMEDIATAMENTE
+
+            try { // Añadir try-catch por si hay error en la lógica de abajo
+                const possibleAnswers = currentExercise.a.split(' / ').map(ans => normalizeText(ans));
+                const normalizedUserAnswer = normalizeText(userAnswer);
+                console.log("[checkAnswer] Respuestas posibles normalizadas:", possibleAnswers);
+                console.log("[checkAnswer] Respuesta usuario normalizada:", normalizedUserAnswer);
+
+                feedback.style.display = 'inline-block'; // Mostrar área de feedback
+                if (possibleAnswers.includes(normalizedUserAnswer)) {
+                    console.log("[checkAnswer] Respuesta CORRECTA.");
+                    feedback.innerText = "✅ ¡Correcto!";
+                    feedback.className = 'correct';
+                } else {
+                    console.log("[checkAnswer] Respuesta INCORRECTA.");
+                    feedback.innerText = `❌ Incorrecto. La respuesta es: ${possibleAnswers[0]}`;
+                    if (possibleAnswers.length > 1) { feedback.innerText += ` (o ${possibleAnswers.slice(1).join(' / ')})`; }
+                    feedback.className = 'incorrect';
+                }
+
+                console.log("[checkAnswer] Mostrando botón Siguiente.");
+                nextQuestionBtn.style.display = 'inline-block'; // Mostrar botón 'Siguiente'
+
+            } catch (error) {
+                console.error("[checkAnswer] Error durante la verificación:", error);
+                feedback.innerText = "⚠️ Ocurrió un error al verificar la respuesta.";
+                feedback.className = 'incorrect';
+                feedback.style.display = 'inline-block';
+                // Asegurarse de mostrar el botón Siguiente incluso si hay error
+                nextQuestionBtn.style.display = 'inline-block';
+            }
+        }
+
+        function askNextQuestion() {
+            console.log("[askNextQuestion] Se hizo clic en Siguiente.");
+            if (lastAskedType) {
+                askQuestion(lastAskedType); // Cargar nueva pregunta del mismo tipo
+            } else {
+                questionSection.style.display = 'none'; // Ocultar si no hay tipo
+                console.warn("[askNextQuestion] No se encontró el último tipo preguntado.");
+            }
+        }
+
+
+        // --- Speech Recognition Setup and Handlers ---
+        function setupSpeechRecognition() {
+            if (!SpeechRecognition) {
+                // No se puede mostrar en speechFeedbackArea si la sección está oculta
+                console.error("SpeechRecognition no soportado.");
+                // Podríamos deshabilitar el botón de Speaking globalmente aquí, pero es complejo
+                return null;
+            }
+
+            console.log("[setupSpeechRecognition] Configurando SpeechRecognition...");
+            const rec = new SpeechRecognition();
+            rec.lang = "en-US";
+            rec.interimResults = false;
+            rec.maxAlternatives = 1;
+
+            rec.onstart = function () {
+                console.log("[SpeechRecognition] onstart");
+                startSpeakingBtn.classList.add('listening');
+                startSpeakingBtn.innerHTML = "👂 Escuchando...";
+                startSpeakingBtn.disabled = true;
+                speechFeedbackArea.innerHTML = `<div class="prompt">Frase: "${currentPhraseToSay}"</div><div class="result listening-msg">Escuchando...</div>`;
+            };
+
+            rec.onresult = function (event) {
+                const transcript = event.results[0][0].transcript;
+                console.log(`[SpeechRecognition] onresult: "${transcript}"`);
+                const normalizedTranscript = normalizeText(transcript);
+                const normalizedPrompt = normalizeText(currentPhraseToSay);
+
+                let resultHTML = `<div class="prompt">Frase: "${currentPhraseToSay}"</div>`;
+                resultHTML += `<div class="transcript">Dijiste: "${transcript}"</div>`;
+                let isCorrect = false;
+
+                if (normalizedTranscript === normalizedPrompt) {
+                    resultHTML += `<div class="result correct">✅ ¡Excelente Coincidencia!</div>`;
+                    isCorrect = true;
+                } else {
+                    const promptWords = normalizedPrompt.split(' ');
+                    const transcriptWords = normalizedTranscript.split(' ');
+                    const commonWords = promptWords.filter(word => transcriptWords.includes(word));
+                    const similarity = commonWords.length / Math.max(promptWords.length, 1);
+                    if (similarity > 0.75) {
+                        resultHTML += `<div class="result correct">👍 ¡Muy Cercano! Buen trabajo.</div>`;
+                        isCorrect = true;
+                    } else {
+                        resultHTML += `<div class="result incorrect">❌ No es correcto. ¡Inténtalo de nuevo o pasa a la siguiente!</div>`;
+                    }
+                }
+                speechFeedbackArea.innerHTML = resultHTML;
+                console.log(`[SpeechRecognition] ¿Correcto?: ${isCorrect}`);
+
+                nextQuestionBtn.style.display = 'inline-block'; // Mostrar 'Siguiente'
+                if (!isCorrect) {
+                    startSpeakingBtn.disabled = false;
+                    startSpeakingBtn.classList.remove('listening');
+                    startSpeakingBtn.innerHTML = "🎤 Intentar de Nuevo";
+                    console.log("[SpeechRecognition] Botón Hablar reactivado para reintento.");
+                } else {
+                    // Botón Hablar se queda deshabilitado, se resetea en askQuestion
+                    startSpeakingBtn.innerHTML = "🎤 Empezar a Hablar";
+                }
+            };
+
+            rec.onerror = function (event) {
+                console.error(`[SpeechRecognition] onerror: ${event.error}`);
+                let errorMessage = "Error: " + event.error;
+                if (event.error === 'no-speech') errorMessage = "🔇 No se detectó voz...";
+                else if (event.error === 'audio-capture') errorMessage = "🎤 Error de captura de audio...";
+                else if (event.error === 'not-allowed') errorMessage = "🚫 Permiso denegado...";
+                else if (event.error === 'network') errorMessage = "🌐 Error de Red...";
+                else if (event.error === 'service-not-allowed') errorMessage = "🔧 Servicio no permitido...";
+                else if (event.error === 'aborted') errorMessage = "🛑 Reconocimiento detenido...";
+                else errorMessage = `⚠️ Error inesperado (${event.error})...`;
+
+                speechFeedbackArea.innerHTML = `<div class="result incorrect">${errorMessage}</div>`;
+
+                startSpeakingBtn.classList.remove('listening');
+                startSpeakingBtn.innerHTML = "🎤 Intentar de Nuevo"; // Permitir reintento
+                startSpeakingBtn.disabled = false;
+                nextQuestionBtn.style.display = 'inline-block'; // Mostrar 'Siguiente'
+            };
+
+            rec.onend = function () {
+                console.log("[SpeechRecognition] onend");
+                // Asegurar reseteo si no lo hizo onresult/onerror
+                if (startSpeakingBtn.classList.contains('listening')) {
+                    console.log("[SpeechRecognition] onend: Forzando reseteo de botón listening.");
+                    startSpeakingBtn.classList.remove('listening');
+                    if (!speechFeedbackArea.querySelector('.result.correct')) {
+                        startSpeakingBtn.innerHTML = "🎤 Intentar de Nuevo";
+                        startSpeakingBtn.disabled = false;
+                    } else {
+                        startSpeakingBtn.innerHTML = "🎤 Empezar a Hablar";
+                        // Se queda deshabilitado si fue correcto
+                    }
+                }
+            };
+            console.log("[setupSpeechRecognition] Configuración completada.");
+            return rec;
+        }
+
+        recognition = setupSpeechRecognition(); // Inicializar al cargar
+
+        function startListening() {
+            console.log("[startListening] Se hizo clic en Empezar a Hablar.");
+            if (!recognition) {
+                console.error("[startListening] Reconocimiento no inicializado.");
+                return;
+            }
+            if (startSpeakingBtn.classList.contains('listening')) {
+                console.warn("[startListening] Ya está escuchando.");
+                return; // Ya está escuchando
+            }
+            if (!currentPhraseToSay) {
+                console.error("[startListening] No hay frase actual para decir.");
+                speechFeedbackArea.innerHTML = '<div class="result incorrect">⚠️ No hay frase seleccionada para decir.</div>';
+                return;
+            }
+
+            speechFeedbackArea.innerHTML = `<div class="prompt">Frase: "${currentPhraseToSay}"</div><div class="result listening-msg">Prepárate...</div>`;
+            console.log("[startListening] Iniciando timeout antes de recognition.start().");
+
+            setTimeout(() => {
+                try {
+                    console.log("[startListening] Intentando recognition.start().");
+                    recognition.start();
+                } catch (e) {
+                    console.error(`[startListening] Error al llamar a recognition.start(): ${e.message}`, e);
+                    speechFeedbackArea.innerHTML = `<div class="result incorrect">⚠️ No se pudo iniciar la escucha. Error: ${e.message}</div>`;
+                    startSpeakingBtn.classList.remove('listening');
+                    startSpeakingBtn.innerHTML = "🎤 Intentar de Nuevo";
+                    startSpeakingBtn.disabled = false;
+                    nextQuestionBtn.style.display = 'inline-block';
+                }
+            }, 200);
+        }
+
+        // Inicializar la UI oculta (opcional, pero bueno por si acaso)
+        window.onload = () => {
+            console.log("window.onload: Ocultando sección de preguntas inicialmente.");
+            questionSection.style.display = "none";
+        }
+
+    </script>
 </body>
 
 </html>
